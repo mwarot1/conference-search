@@ -10,4 +10,5 @@ $scores = $sa->return_sentiment_rating();
 //var_dump($scores);
 
 //$ratings = $sa->return_sentiment_calculations();
+header('access-control-allow-origin:*');
 echo $scores;
