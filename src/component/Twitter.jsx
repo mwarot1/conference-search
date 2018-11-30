@@ -53,11 +53,25 @@ class Twitter extends Component {
           tweet.forEach((tweet, key, arr) => { //For each tweet, it will request for embed type from twiiter
             fetch(proxyURL + "https://publish.twitter.com/oembed?url=" + tweet)
               .then(response => response.json())
-              .then(data => {
+              .then(async data => {
                 // console.log(data);
+                const positive = '<i class="fa fa-smile-o" style="color: green; font-size: 2rem"/>'
+                const neutral = '<i class="fa fa-meh-o" style="color: grey; font-size: 2rem"/>'
+                const negative = '<i class="fa fa-frown-o" style="color: red; font-size: 2rem"/>'
+                let sentimentalscore = 2.5;
                 let snippet = data.html; //Get the embed html tag
+                await $.post('http://mwarot.herokuapp.com/sentiment.php',{
+                    text: snippet
+                },
+                function(rate){
+                    sentimentalscore = Number(rate);
+                })
                 console.log(snippet);
+                console.log(sentimentalscore)
                 embed += `<div class="card" style="border: none">
+                            <div class="card-header">
+                                ${sentimentalscore>2.7 ? positive : sentimentalscore<2.4 ? negative : neutral}
+                            </div>
                             ${snippet}
                      </div>`;
                 if (key === arr.length - 1) {//If it the last item, insert end div and display embed to #TweetContent
