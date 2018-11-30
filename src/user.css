@@ -1,0 +1,30 @@
+a.nodecorate {
+  text-decoration: none;
+  color: black;
+}
+.isDark{
+  background: #222;
+  color: #fff;
+}
+hr{
+  border-color: #eee
+}
+hr.isDark{
+  border-color: #eee
+}
+@media (min-width: 576px) {
+  .card-columns#ieee {
+    column-count: 1;
+  }
+}
+@media (min-width: 576px) {
+  .card-columns {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card-columns {
+    column-count: 3;
+  }
+}
