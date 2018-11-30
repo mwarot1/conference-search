@@ -33,7 +33,7 @@ class Twitter extends Component {
       },
       //Then proceed to the function below
       function(tweet) {
-        console.log(tweet.statuses);//Debugging purpose
+        console.log(tweet.statuses); //Debugging purpose
         //Each status URL will be pushed in the array 'tweetsURL'
         tweet.statuses.forEach(tw => {
           tweetsURL.push(
@@ -50,31 +50,44 @@ class Twitter extends Component {
             '<hr/><h2>Comments</h2><hr/><i class="fa fa-spinner fa-spin"/>'; //Spin loading while the request not finish yet
           $("#TweetContent").html(embed);
           embed = '<hr/><h2>Comments</h2><hr/><div class="card-columns">';
-          tweet.forEach((tweet, key, arr) => { //For each tweet, it will request for embed type from twiiter
+          tweet.forEach((tweet, key, arr) => {
+            //For each tweet, it will request for embed type from twiiter
             fetch(proxyURL + "https://publish.twitter.com/oembed?url=" + tweet)
               .then(response => response.json())
               .then(async data => {
                 // console.log(data);
-                const positive = '<i class="fa fa-smile-o" style="color: green; font-size: 2rem"/>'
-                const neutral = '<i class="fa fa-meh-o" style="color: grey; font-size: 2rem"/>'
-                const negative = '<i class="fa fa-frown-o" style="color: red; font-size: 2rem"/>'
+                const positive =
+                  '<i class="fa fa-smile-o" style="color: green; font-size: 2rem"/>';
+                const neutral =
+                  '<i class="fa fa-meh-o" style="color: grey; font-size: 2rem"/>';
+                const negative =
+                  '<i class="fa fa-frown-o" style="color: red; font-size: 2rem"/>';
                 let sentimentalscore = 2.5;
                 let snippet = data.html; //Get the embed html tag
-                await $.post('http://mwarot.herokuapp.com/sentiment.php',{
+                await $.post(
+                  "http://mwarot.herokuapp.com/sentiment.php",
+                  {
+                    //Request a sentiment rating for a snippet
                     text: snippet
-                },
-                function(rate){
-                    sentimentalscore = Number(rate);
-                })
-                console.log(snippet);
-                console.log(sentimentalscore)
+                  },
+                  function(rate) {
+                    sentimentalscore = Number(rate); //The score will be in range 1-5
+                  }
+                );
                 embed += `<div class="card" style="border: none">
                             <div class="card-header">
-                                ${sentimentalscore>2.7 ? positive : sentimentalscore<2.4 ? negative : neutral}
+                                ${
+                                  sentimentalscore > 2.7
+                                    ? positive
+                                    : sentimentalscore < 2.4
+                                    ? negative
+                                    : neutral /* score > 2.7 is positive, < 2.3 is negative, and between that is neutral */
+                                }
                             </div>
                             ${snippet}
                      </div>`;
-                if (key === arr.length - 1) {//If it the last item, insert end div and display embed to #TweetContent
+                if (key === arr.length - 1) {
+                  //If it the last item, insert end div and display embed to #TweetContent
                   //   console.log(embed);
                   embed += "</div>";
                   $("#TweetContent").html(embed);
