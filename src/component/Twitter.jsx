@@ -65,7 +65,7 @@ class Twitter extends Component {
                 let sentimentalscore = 2.5;
                 let snippet = data.html; //Get the embed html tag
                 await $.post(
-                  "http://mwarot.herokuapp.com/sentiment.php",
+                  "https://mwarot.herokuapp.com/sentiment.php",
                   {
                     //Request a sentiment rating for a snippet
                     text: snippet
